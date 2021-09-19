@@ -371,8 +371,8 @@ def train_tbpp_item(args):
     from tasks.tbpp_item import TiDataset
 
     # Determines the maximum amount of load for a vehicle based on num nodes
-    STATIC_SIZE = 3 # (x, y)
-    DYNAMIC_SIZE = 1 # (rest_cap)
+    STATIC_SIZE = 3  # (x, y)
+    DYNAMIC_SIZE = 1  # (rest_cap)
 
     train_data = TiDataset(args.num_nodes, args.train_size)
     valid_data = TiDataset(args.num_nodes, args.valid_size, training=False)
@@ -386,7 +386,7 @@ def train_tbpp_item(args):
                     args.dropout).to(device)
 
     critic = StateCritic(STATIC_SIZE, DYNAMIC_SIZE, args.hidden_size).to(device)
-    actor = torch.load('tbpp_item/50/2021-09-18-19/checkpoints/2/actor.pt')
+    # actor = torch.load('tbpp_item/50/2021-09-18-19/checkpoints/2/actor.pt')
     # critic = torch.load('tbpp_dynamic/50/2021-09-13-14/checkpoints/0/critic.pt')
     kwargs = vars(args)
     kwargs['train_data'] = train_data
@@ -417,11 +417,11 @@ if __name__ == '__main__':
     parser.add_argument('--test', action='store_true', default=False)
     parser.add_argument('--task', default='tbpp_item')
     parser.add_argument('--nodes', dest='num_nodes', default=50, type=int)
-    parser.add_argument('--actor_lr', default=5e-4, type=float)
+    parser.add_argument('--actor_lr', default=1e-3, type=float)
     parser.add_argument('--critic_lr', default=1e-6, type=float)
     parser.add_argument('--max_grad_norm', default=2., type=float)
     parser.add_argument('--batch_size', default=256, type=int)
-    parser.add_argument('--hidden', dest='hidden_size', default=128, type=int)
+    parser.add_argument('--hidden', dest='hidden_size', default=256, type=int)
     parser.add_argument('--dropout', default=0.1, type=float)
     parser.add_argument('--layers', dest='num_layers', default=1, type=int)
     parser.add_argument('--train-size',default=1000000, type=int)

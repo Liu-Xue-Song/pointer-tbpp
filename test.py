@@ -8,7 +8,6 @@ from tasks import tbpp
 from trainer import StateCritic
 
 
-
 def BestFit(s, e, c, Cap=100):
     n = len(s)
     f = max(e)
@@ -47,7 +46,6 @@ def valid():
     print(np.mean(reward_bf))
 
 
-
 def judge(d=None):
     from tasks import tbpp
     from tasks.tbpp import TBPPDataset
@@ -83,7 +81,7 @@ def judge(d=None):
 
 
 def judge_item():
-    actor = torch.load('tbpp_item/50/2021-09-18-19/checkpoints/2/actor.pt')
+    actor = torch.load('tbpp_item/50/2021-09-19-12/checkpoints/1/actor.pt')
     from tasks import tbpp_item
     from tasks.tbpp_item import TiDataset
     points_test = np.load('test50.npy').transpose((0, 2, 1))
@@ -109,16 +107,16 @@ def judge_item():
     print(fea)
     
     points = np.load('valid50.npy').transpose((0,2,1))
-    points = torch.tensor(points)
-    points = torch.cat((torch.zeros(10,3,1),points),2)
-    dynamic = torch.ones(points.shape[0],1,points.shape[2])
+    static = torch.tensor(points)
+    static = torch.cat((torch.zeros(10,3,1),static),2)
+    dynamic = torch.ones(static.shape[0],1,static.shape[2])
     dynamic[:,:,0] = 0
     
     actor.eval()
     with torch.no_grad():
         # dynamic = torch.zeros(static.size()[0], 1, static.size()[2])
-        tour_indices, tour_logp = actor(points, dynamic, None)
-        reward = tbpp_item.reward(points, tour_indices)
+        tour_indices, tour_logp = actor(static, dynamic, None)
+        reward = tbpp_item.reward(static, tour_indices)
     print(reward.mean().item())
     reward_bf = []
     for i in range(10):
@@ -165,8 +163,6 @@ def check_item(points, tour_index):
         if u[i]!=1:
             return False
     return True
-
-
 
 
 def train_sample(actor, critic, static, dynamic, x0):
